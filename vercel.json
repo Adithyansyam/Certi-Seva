@@ -1,7 +1,4 @@
 {
-  "buildCommand": "cd vite-project && npm install && npx vite build --outDir ../dist",
-  "outputDirectory": "dist",
-  "installCommand": "echo skip",
   "github": {
     "silent": true
   }
