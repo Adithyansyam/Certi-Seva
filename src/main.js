@@ -5,7 +5,7 @@ import './style.css'
 // ===================================
 document.addEventListener('DOMContentLoaded', () => {
   // Navigation scroll effect
-  const nav = document.querySelector('.nav');
+  const nav = document.querySelector('.navbar');
   const navLinks = document.querySelectorAll('.nav-link');
 
   window.addEventListener('scroll', () => {
@@ -15,29 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
       nav.classList.remove('scrolled');
     }
   });
-
-  // Active link on scroll
-  const sections = document.querySelectorAll('section[id]');
-
-  const observerOptions = {
-    threshold: 0.3,
-    rootMargin: '-80px 0px 0px 0px'
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        navLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${entry.target.id}`) {
-            link.classList.add('active');
-          }
-        });
-      }
-    });
-  }, observerOptions);
-
-  sections.forEach(section => observer.observe(section));
 
   // Smooth scroll for anchor links
   navLinks.forEach(link => {
@@ -52,6 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
           top: offsetTop,
           behavior: 'smooth'
         });
+
+        // Close mobile menu if open
+        const navLinksContainer = document.querySelector('.nav-links');
+        if (navLinksContainer.classList.contains('active')) {
+          navLinksContainer.classList.remove('active');
+          menuToggle.classList.remove('active');
+        }
       }
     });
   });
@@ -84,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Scroll Animations
 // ===================================
 const animateOnScroll = () => {
-  const elements = document.querySelectorAll('.service-card, .feature-item');
+  const elements = document.querySelectorAll('.problem-card, .solution-card, .feature-card, .step, .tech-card, .team-member');
 
   const observerOptions = {
     threshold: 0.2,
@@ -117,49 +101,48 @@ document.addEventListener('DOMContentLoaded', animateOnScroll);
 // ===================================
 // Download Button Interactions
 // ===================================
-const downloadButtons = document.querySelectorAll('.download-btn');
+const downloadButtons = document.querySelectorAll('.btn-download, .btn-primary[href="#download"]');
 
-// Google Drive file ID extracted from the share link
+// Google Drive file ID from the existing configuration
 const GOOGLE_DRIVE_FILE_ID = '10ynipxLeID7bvQVOr9fIJ1ESVjSpzVZC';
 const APK_DOWNLOAD_URL = `https://drive.google.com/uc?export=download&id=${GOOGLE_DRIVE_FILE_ID}`;
 
 downloadButtons.forEach(button => {
   button.addEventListener('click', (e) => {
-    // Create ripple effect
-    const ripple = document.createElement('span');
-    const rect = button.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    const x = e.clientX - rect.left - size / 2;
-    const y = e.clientY - rect.top - size / 2;
+    // Only handle download if it's the actual download button
+    if (button.classList.contains('btn-download') || button.textContent.includes('Download')) {
+      e.preventDefault();
 
-    ripple.style.width = ripple.style.height = size + 'px';
-    ripple.style.left = x + 'px';
-    ripple.style.top = y + 'px';
-    ripple.style.position = 'absolute';
-    ripple.style.borderRadius = '50%';
-    ripple.style.background = 'rgba(0, 0, 0, 0.2)';
-    ripple.style.transform = 'scale(0)';
-    ripple.style.animation = 'ripple 0.6s ease-out';
-    ripple.style.pointerEvents = 'none';
+      // Create ripple effect
+      const ripple = document.createElement('span');
+      const rect = button.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
 
-    button.appendChild(ripple);
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = x + 'px';
+      ripple.style.top = y + 'px';
+      ripple.style.position = 'absolute';
+      ripple.style.borderRadius = '50%';
+      ripple.style.background = 'rgba(0, 0, 0, 0.2)';
+      ripple.style.transform = 'scale(0)';
+      ripple.style.animation = 'ripple 0.6s ease-out';
+      ripple.style.pointerEvents = 'none';
 
-    setTimeout(() => ripple.remove(), 600);
+      button.style.position = 'relative';
+      button.style.overflow = 'hidden';
+      button.appendChild(ripple);
 
-    // Handle download action
-    const isAppStore = button.classList.contains('app-store');
+      setTimeout(() => ripple.remove(), 600);
 
-    if (isAppStore) {
-      // For App Store button - show coming soon message
-      showNotification('iOS version coming soon!');
-    } else {
-      // For Google Play button - download the APK
-      showNotification('Downloading APK...');
+      // Handle download action
+      showNotification('Downloading CertiSeva APK...');
 
       // Create a temporary anchor element to trigger download
       const downloadLink = document.createElement('a');
       downloadLink.href = APK_DOWNLOAD_URL;
-      downloadLink.download = 'ComputerCenter.apk';
+      downloadLink.download = 'CertiSeva.apk';
       downloadLink.target = '_blank';
       document.body.appendChild(downloadLink);
       downloadLink.click();
@@ -176,12 +159,12 @@ downloadButtons.forEach(button => {
 // Add ripple animation to CSS dynamically
 const style = document.createElement('style');
 style.textContent = `
-    @keyframes ripple {
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
+  @keyframes ripple {
+    to {
+      transform: scale(4);
+      opacity: 0;
     }
+  }
 `;
 document.head.appendChild(style);
 
@@ -205,7 +188,7 @@ function showNotification(message) {
     position: 'fixed',
     bottom: '30px',
     right: '30px',
-    backgroundColor: '#000',
+    backgroundColor: '#2563eb',
     color: '#fff',
     padding: '1rem 1.5rem',
     borderRadius: '0.75rem',
@@ -229,147 +212,55 @@ function showNotification(message) {
 // Add notification animations
 const notificationStyle = document.createElement('style');
 notificationStyle.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
+  @keyframes slideInRight {
+    from {
+      transform: translateX(400px);
+      opacity: 0;
     }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(400px);
-            opacity: 0;
-        }
+    to {
+      transform: translateX(0);
+      opacity: 1;
     }
+  }
+  
+  @keyframes slideOutRight {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(400px);
+      opacity: 0;
+    }
+  }
 `;
 document.head.appendChild(notificationStyle);
 
 // ===================================
-// Hero Button Interactions
+// Active Navigation Highlighting
 // ===================================
-const heroButtons = document.querySelectorAll('.hero-buttons .btn');
+const sections = document.querySelectorAll('section[id]');
 
-heroButtons.forEach(button => {
-  button.addEventListener('click', (e) => {
-    if (button.classList.contains('btn-primary')) {
-      // Scroll to download section
-      e.preventDefault();
-      const downloadSection = document.querySelector('#download');
-      if (downloadSection) {
-        const offsetTop = downloadSection.offsetTop - 80;
-        window.scrollTo({
-          top: offsetTop,
-          behavior: 'smooth'
-        });
-      }
-    }
-  });
-});
+const observerOptions = {
+  threshold: 0.3,
+  rootMargin: '-80px 0px 0px 0px'
+};
 
-// ===================================
-// Service Card Interactions
-// ===================================
-const serviceCards = document.querySelectorAll('.service-card');
-
-serviceCards.forEach(card => {
-  card.addEventListener('mouseenter', function () {
-    this.style.transform = 'translateY(-8px) scale(1.02)';
-  });
-
-  card.addEventListener('mouseleave', function () {
-    this.style.transform = 'translateY(0) scale(1)';
-  });
-
-  // Add click interaction
-  card.addEventListener('click', function () {
-    const title = this.querySelector('.service-title').textContent;
-    showNotification(`Learn more about ${title}`);
-  });
-});
-
-// ===================================
-// Parallax Effect for Hero
-// ===================================
-window.addEventListener('scroll', () => {
-  const scrolled = window.pageYOffset;
-  const heroVisual = document.querySelector('.hero-visual');
-  const floatingCards = document.querySelectorAll('.floating-card');
-
-  if (heroVisual && scrolled < window.innerHeight) {
-    heroVisual.style.transform = `translateY(${scrolled * 0.3}px)`;
-
-    floatingCards.forEach((card, index) => {
-      const speed = 0.2 + (index * 0.1);
-      card.style.transform = `translateY(${scrolled * speed}px)`;
-    });
-  }
-});
-
-// ===================================
-// Counter Animation for Stats
-// ===================================
-const statsObserver = new IntersectionObserver((entries) => {
+const sectionObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      const statNumbers = entry.target.querySelectorAll('.stat-number');
-      statNumbers.forEach(stat => {
-        const text = stat.textContent;
-        const value = parseInt(text.replace(/\D/g, ''));
-        const suffix = text.replace(/[0-9]/g, '');
-
-        let current = 0;
-        const increment = value / 50;
-
-        const counter = setInterval(() => {
-          current += increment;
-          if (current >= value) {
-            stat.textContent = value + suffix;
-            clearInterval(counter);
-          } else {
-            stat.textContent = Math.floor(current) + suffix;
-          }
-        }, 40);
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${entry.target.id}`) {
+          link.classList.add('active');
+        }
       });
-      statsObserver.unobserve(entry.target);
     }
   });
-}, { threshold: 0.5 });
+}, observerOptions);
 
-const downloadStats = document.querySelector('.download-stats');
-if (downloadStats) {
-  statsObserver.observe(downloadStats);
-}
-
-// ===================================
-// Performance Optimization
-// ===================================
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
-
-// Apply debounce to scroll-heavy operations
-const debouncedScroll = debounce(() => {
-  // Any heavy scroll operations can go here
-}, 10);
-
-window.addEventListener('scroll', debouncedScroll);
+sections.forEach(section => sectionObserver.observe(section));
 
 // ===================================
 // Loading Animation
@@ -385,15 +276,6 @@ window.addEventListener('load', () => {
 // ===================================
 // Accessibility Enhancements
 // ===================================
-serviceCards.forEach(card => {
-  card.setAttribute('tabindex', '0');
-  card.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      card.click();
-    }
-  });
-});
-
 // Focus visible for better keyboard navigation
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Tab') {
@@ -408,11 +290,11 @@ document.addEventListener('mousedown', () => {
 // Add focus styles
 const focusStyle = document.createElement('style');
 focusStyle.textContent = `
-    .keyboard-nav *:focus {
-        outline: 2px solid #000;
-        outline-offset: 4px;
-    }
+  .keyboard-nav *:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 4px;
+  }
 `;
 document.head.appendChild(focusStyle);
 
-console.log('🚀 Computer Center Landing Page Loaded Successfully!');
+console.log('🚀 CertiSeva Landing Page Loaded Successfully!');
