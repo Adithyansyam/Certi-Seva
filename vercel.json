@@ -1,8 +1,8 @@
 {
-  "buildCommand": "cd vite-project && npm install && npm run build",
+  "buildCommand": "cd vite-project && npm run build",
   "outputDirectory": "vite-project/dist",
   "installCommand": "cd vite-project && npm install",
-  "framework": null,
+  "devCommand": "cd vite-project && npm run dev",
   "github": {
     "silent": true
   }
