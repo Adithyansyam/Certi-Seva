@@ -1,7 +1,7 @@
 {
-  "buildCommand": "cd vite-project && npm install && npm run build && mkdir -p ../dist && cp -r dist/* ../dist/",
+  "buildCommand": "cd vite-project && npm install && npx vite build --outDir ../dist",
   "outputDirectory": "dist",
-  "installCommand": "echo 'skip'",
+  "installCommand": "echo skip",
   "github": {
     "silent": true
   }
