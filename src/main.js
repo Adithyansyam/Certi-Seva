@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', animateOnScroll);
 const downloadButtons = document.querySelectorAll('.btn-download, .btn-primary[href="#download"]');
 
 // Google Drive file ID from the existing configuration
-const GOOGLE_DRIVE_FILE_ID = '10ynipxLeID7bvQVOr9fIJ1ESVjSpzVZC';
+const GOOGLE_DRIVE_FILE_ID = '1CFHYgb9IfaTPMd_KsCvtjVEL4J2pzbdr';
 const APK_DOWNLOAD_URL = `https://drive.google.com/uc?export=download&id=${GOOGLE_DRIVE_FILE_ID}`;
 
 downloadButtons.forEach(button => {
