@@ -101,11 +101,8 @@ document.addEventListener('DOMContentLoaded', animateOnScroll);
 // ===================================
 // Download Button Interactions
 // ===================================
-const downloadButtons = document.querySelectorAll('.btn-download, .btn-primary[href="#download"]');
-
-// Google Drive file ID from the existing configuration
-const GOOGLE_DRIVE_FILE_ID = '1CFHYgb9IfaTPMd_KsCvtjVEL4J2pzbdr';
-const APK_DOWNLOAD_URL = `https://drive.google.com/uc?export=download&id=${GOOGLE_DRIVE_FILE_ID}`;
+const downloadButtons = document.querySelectorAll('.btn-download, .btn-primary[download]');
+const APK_DOWNLOAD_URL = '/certiseva.apk';
 
 downloadButtons.forEach(button => {
   button.addEventListener('click', (e) => {
@@ -143,7 +140,6 @@ downloadButtons.forEach(button => {
       const downloadLink = document.createElement('a');
       downloadLink.href = APK_DOWNLOAD_URL;
       downloadLink.download = 'CertiSeva.apk';
-      downloadLink.target = '_blank';
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
